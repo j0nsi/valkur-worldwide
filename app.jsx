@@ -17,9 +17,9 @@ function Presencia(){
     return ()=> window.I18N.subs.delete(fn);
   },[]);
   return (
-    <section id="presencia" style={presStyles.wrap}>
+    <section id="presencia" className="v-pres" style={presStyles.wrap}>
       <div style={presStyles.inner}>
-        <div style={presStyles.header}>
+        <div className="v-pres-head" style={presStyles.header}>
           <div>
             <div className="mono" style={presStyles.eyebrow}>{t('presencia.eyebrow')}</div>
             <h2 className="serif" style={presStyles.h2}>
@@ -36,12 +36,12 @@ function Presencia(){
         </div>
 
         <div style={presStyles.mapHolder}>
-          <div style={presStyles.mapFrame}>
+          <div className="v-pres-frame" style={presStyles.mapFrame}>
             <div style={presStyles.frameCorner1}/>
             <div style={presStyles.frameCorner2}/>
             <div style={presStyles.frameCorner3}/>
             <div style={presStyles.frameCorner4}/>
-            <div style={presStyles.mapLabel} className="mono">
+            <div style={presStyles.mapLabel} className="mono v-pres-label">
               <span>{t('presencia.mapLabel')}</span>
               <span style={{color:'var(--accent)'}}>{t('presencia.mapStamp')}</span>
             </div>

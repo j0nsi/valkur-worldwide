@@ -2,14 +2,14 @@ function Nav(){
   const t = useT();
   const [lang, setLang] = useLang();
   return (
-    <nav style={navStyles.wrap}>
-      <div style={navStyles.left} className="mono">
+    <nav className="v-nav" style={navStyles.wrap}>
+      <div style={navStyles.left} className="mono v-nav-left">
         <span style={{color:'var(--ink-mute)'}}>{t('nav.est')}</span> 2017
       </div>
-      <a href="#top" style={navStyles.center}>
+      <a href="#top" className="v-nav-center" style={navStyles.center}>
         <img src="assets/valkur-logo.png" alt="Valkur" style={navStyles.logoImg}/>
       </a>
-      <div style={navStyles.right}>
+      <div className="v-nav-right" style={navStyles.right}>
         <a href="#historia" style={navStyles.link}>{t('nav.historia')}</a>
         <a href="#presencia" style={navStyles.link}>{t('nav.presencia')}</a>
         <a href="#contacto" style={{...navStyles.link, color:'var(--accent)'}}>{t('nav.contacto')}</a>

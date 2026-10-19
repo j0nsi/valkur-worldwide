@@ -1,13 +1,13 @@
 function Footer(){
   const t = useT();
   return (
-    <footer id="contacto" style={footStyles.wrap}>
+    <footer id="contacto" className="v-foot" style={footStyles.wrap}>
       <div style={footStyles.inner}>
-        <div style={footStyles.giantWrap}>
+        <div className="v-foot-logo" style={footStyles.giantWrap}>
           <img src="assets/valkur-logo.png" alt="Valkur" style={footStyles.giantImg}/>
         </div>
 
-        <div style={footStyles.grid}>
+        <div className="v-foot-grid" style={footStyles.grid}>
           <div style={footStyles.col}>
             <div className="mono" style={footStyles.colHead}>{t('footer.official')}</div>
             <a href="https://valkur.com.ar" target="_blank" rel="noopener" style={footStyles.link}>
@@ -40,7 +40,7 @@ function Footer(){
           </div>
         </div>
 
-        <div style={footStyles.bottom}>
+        <div className="v-foot-bottom" style={footStyles.bottom}>
           <div className="mono" style={footStyles.fine}>{t('footer.copyright')}</div>
           <div className="mono" style={footStyles.fine}>{t('footer.rights')}</div>
           <div className="mono" style={footStyles.fine}>{t('footer.tagline')}</div>

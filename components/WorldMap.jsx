@@ -56,13 +56,14 @@ function WorldMap(){
   const tw = window.__TWEAKS__ || {};
   const style = tw.mapStyle || 'solid';
   const density = tw.constellationDensity || 1;
+  const compact = size.w < 700;
 
   useEffect(()=>{ loadLatAm().then(setFeatures).catch(()=>setFeatures([])); },[]);
   useEffect(()=>{
     const el = wrapRef.current; if(!el) return;
     const ro = new ResizeObserver(([e])=>{
       const w = e.contentRect.width;
-      setSize({w, h: Math.min(Math.max(w*0.7, 560), 820)});
+      setSize({w, h: w<700 ? Math.round(w*1.25) : Math.min(Math.max(w*0.7, 560), 820)});
     });
     ro.observe(el);
     return ()=>ro.disconnect();
@@ -70,7 +71,7 @@ function WorldMap(){
 
   const geo = useMemo(()=>{
     if (!features || !features.length) return null;
-    const pad = 24;
+    const pad = size.w<700 ? 10 : 24;
     const projection = d3.geoMercator().fitExtent([[pad,pad],[size.w-pad,size.h-pad]], {type:'FeatureCollection', features});
     const path = d3.geoPath(projection);
     const shapes = features.map(f=>({ id:f.id, code:ACTIVE_IDS[f.id] || null, d:path(f) }));
@@ -179,7 +180,7 @@ function WorldMap(){
             <g key={c.code} transform={`translate(${c.x},${c.y})`} pointerEvents="none">
               <circle r={on?6:5} fill="#0A0A0C" stroke="#DDEFE2" strokeWidth="1.4"/>
               <circle r="2" fill="#DDEFE2"/>
-              <g opacity={on?0:1} style={{transition:'opacity .2s'}}>
+              <g opacity={on||compact?0:1} style={{transition:'opacity .2s'}}>
                 <line x1={12*dir} y1={0} x2={44*dir} y2={0} style={{stroke:'var(--accent)'}} strokeWidth=".8"/>
                 <text x={50*dir} y={3.5} textAnchor={dir>0?'start':'end'} fill="#EDEAE3" fontFamily="JetBrains Mono" fontSize="10" letterSpacing="2.5" fontWeight="500">{t('countries.'+c.code+'.label')}</text>
               </g>
@@ -188,7 +189,7 @@ function WorldMap(){
         })}
 
         {/* Compass */}
-        <g transform={`translate(${size.w-60}, 60)`} pointerEvents="none" opacity=".45">
+        <g transform={`translate(${size.w-60}, 60)`} pointerEvents="none" opacity={compact?0:.45}>
           <circle r="22" fill="none" stroke="var(--ink-mute)" strokeWidth=".5"/>
           <line x1="0" y1="-22" x2="0" y2="22" stroke="var(--ink-mute)" strokeWidth=".5"/>
           <line x1="-22" y1="0" x2="22" y2="0" stroke="var(--ink-mute)" strokeWidth=".5"/>
@@ -200,7 +201,7 @@ function WorldMap(){
       {activeCap && (
         <a href={activeCap.url} target="_blank" rel="noopener"
           onMouseEnter={()=>setHovered(activeCap.code)} onMouseLeave={()=>setHovered(null)}
-          style={{position:'absolute', left:activeCap.x, top:activeCap.y, transform:'translate(-50%, calc(-100% - 14px))', zIndex:5}}>
+          style={{position:'absolute', left: compact ? Math.min(Math.max(activeCap.x,130),size.w-130) : activeCap.x, top:activeCap.y, transform:'translate(-50%, calc(-100% - 14px))', zIndex:5}}>
           <div style={pinStyles.wrap}>
             <div style={pinStyles.card}>
               <FlagDisc code={activeCap.code} size={32}/>

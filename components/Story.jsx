@@ -1,9 +1,9 @@
 function Story(){
   const t = useT();
   return (
-    <section id="historia" style={storyStyles.wrap}>
-      <div style={storyStyles.inner}>
-        <div style={storyStyles.left}>
+    <section id="historia" className="v-story" style={storyStyles.wrap}>
+      <div className="v-story-inner" style={storyStyles.inner}>
+        <div className="v-story-left" style={storyStyles.left}>
           <div className="mono" style={storyStyles.eyebrow}>{t('historia.eyebrow')}</div>
           <h2 className="serif" style={storyStyles.h2}>
             {t('historia.titleA')} <em style={{color:'var(--accent)'}}>{t('historia.titleAEm')}</em>{t('historia.titleAEnd')}<br/>
@@ -25,16 +25,16 @@ function Story(){
           </div>
         </div>
 
-        <div style={storyStyles.right}>
+        <div className="v-story-right" style={storyStyles.right}>
           <p style={storyStyles.pLead} dangerouslySetInnerHTML={{__html: t('historia.lead')}}/>
           <p style={storyStyles.p}>{t('historia.p1')}</p>
-          <blockquote style={storyStyles.quote} className="serif">{t('historia.quote')}</blockquote>
+          <blockquote style={storyStyles.quote} className="serif v-story-quote">{t('historia.quote')}</blockquote>
           <p style={storyStyles.p}>{t('historia.p2')}</p>
           <p style={storyStyles.p}>{t('historia.p3')}</p>
 
           <div style={storyStyles.closing}>
-            <div className="serif" style={storyStyles.closingLine}>{t('historia.closing1')}</div>
-            <div className="serif" style={{...storyStyles.closingLine, color:'var(--accent)', fontStyle:'italic'}}>
+            <div className="serif v-story-close" style={storyStyles.closingLine}>{t('historia.closing1')}</div>
+            <div className="serif v-story-close" style={{...storyStyles.closingLine, color:'var(--accent)', fontStyle:'italic'}}>
               {t('historia.closing2A')}<br/>{t('historia.closing2B')}
             </div>
           </div>

@@ -1,25 +1,25 @@
 function Hero(){
   const t = useT();
   return (
-    <section style={heroStyles.wrap}>
+    <section className="v-hero" style={heroStyles.wrap}>
       <div style={heroStyles.gridLines}/>
       <div style={heroStyles.inner}>
-        <div style={heroStyles.topRow}>
+        <div className="v-hero-top" style={heroStyles.topRow}>
           <div className="mono" style={heroStyles.eyebrow}>
             <span style={{color:'var(--accent)'}}>◈</span>&nbsp;&nbsp;{t('hero.eyebrow')}
           </div>
-          <div className="mono" style={heroStyles.coords}>
+          <div className="mono v-hero-coords" style={heroStyles.coords}>
             LAT -34.6037 &nbsp; · &nbsp; LON -58.3816
           </div>
         </div>
 
-        <h1 style={heroStyles.h1}>
+        <h1 className="v-hero-h1" style={heroStyles.h1}>
           <span className="serif" style={{display:'block'}}>{t('hero.title1')}</span>
           <span className="serif" style={{display:'block', color:'var(--accent)', fontStyle:'italic', fontWeight:400}}>{t('hero.title2')}</span>
           <span className="serif" style={{display:'block', letterSpacing:'-.01em'}}>{t('hero.title3')}</span>
         </h1>
 
-        <div style={heroStyles.bottomRow}>
+        <div className="v-hero-bottom" style={heroStyles.bottomRow}>
           <div style={heroStyles.tagline}>
             <div className="mono" style={heroStyles.tagEyebrow}>{t('hero.manifestoLabel')}</div>
             <p style={heroStyles.tagText}>
@@ -28,7 +28,7 @@ function Hero(){
             </p>
           </div>
 
-          <div style={heroStyles.scrollCue}>
+          <div className="v-hero-cue" style={heroStyles.scrollCue}>
             <div className="mono" style={{fontSize:10, letterSpacing:'.3em', color:'var(--ink-mute)'}}>{t('hero.scrollLabel')}</div>
             <div style={heroStyles.scrollLine}/>
             <div className="mono" style={{fontSize:10, letterSpacing:'.3em', color:'var(--ink-mute)'}}>{t('hero.scrollCue')}</div>
