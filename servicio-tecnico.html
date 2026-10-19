@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Valkur — Servicio técnico</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H" crossorigin="anonymous">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH" crossorigin="anonymous"></script>
+<style>
+:root{--bg:#08080A;--surface:#0E0E11;--line:#202024;--ink:#EDEAE3;--ink-dim:#9A978F;--ink-mute:#6E6B65;--accent:#369D65;--serif:'Cormorant Garamond',Georgia,serif;--sans:'Inter',system-ui,sans-serif;--mono:'JetBrains Mono',monospace}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:300;-webkit-font-smoothing:antialiased}
+a{color:var(--ink);text-decoration:none;transition:color .2s}a:hover{color:var(--accent)}
+.mono{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase}
+.wrap{max-width:1440px;margin:0 auto;padding:0 48px}
+nav{position:sticky;top:0;z-index:1000;background:rgba(8,8,10,.9);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav .wrap{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding-top:20px;padding-bottom:20px}
+.back{justify-self:start;display:flex;gap:10px;color:var(--ink-dim)}
+.logo img{height:22px;display:block}
+.lang{justify-self:end;display:flex;border:1px solid var(--line);height:28px}
+.lang button{appearance:none;border:0;background:transparent;color:var(--ink-mute);font-family:var(--mono);font-size:10px;letter-spacing:.2em;padding:0 12px;cursor:pointer}
+.lang button.on{color:var(--accent);background:rgba(54,157,101,.08)}
+header{padding:120px 0 64px}
+header .wrap{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:64px;align-items:end}
+.eyebrow{color:var(--ink-mute);margin-bottom:24px}
+h1{margin:0;font-family:var(--serif);font-weight:300;font-size:clamp(56px,8vw,120px);line-height:.95;letter-spacing:-.02em}
+h1 em,h2 em{color:var(--accent);font-weight:400}
+.lead{margin:0;font-size:16px;line-height:1.7;color:var(--ink-dim);max-width:460px;text-wrap:pretty}
+.tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.tab{appearance:none;background:transparent;border:0;border-right:1px solid var(--line);color:var(--ink-dim);cursor:pointer;padding:26px 28px;display:flex;align-items:center;gap:16px;text-align:left;position:relative;font:inherit;transition:background .25s,color .25s}
+.tab:last-child{border-right:0}
+.tab:hover{background:rgba(255,255,255,.015);color:var(--ink)}
+.tab.on{color:var(--ink);background:rgba(54,157,101,.05)}
+.tab.on::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--accent)}
+.tab .code{font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--ink-mute)}
+.tab.on .code{color:var(--accent)}
+.tab .name{font-family:var(--serif);font-size:30px;line-height:1}
+.tab .status{margin-left:auto;font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-mute);display:flex;align-items:center;gap:8px}
+.dot{width:6px;height:6px;border-radius:99px;background:var(--accent);box-shadow:0 0 8px var(--accent)}
+.dot.off{background:var(--ink-mute);box-shadow:none}
+.panel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);min-height:520px;border-bottom:1px solid var(--line)}
+.info{padding:56px 48px 56px 0;display:flex;flex-direction:column;gap:36px;border-right:1px solid var(--line)}
+.info h2{margin:0;font-family:var(--serif);font-weight:300;font-size:clamp(40px,4vw,60px);line-height:1}
+.rows{display:flex;flex-direction:column}
+.row{display:grid;grid-template-columns:120px minmax(0,1fr);gap:20px;padding:18px 0;border-top:1px solid var(--line)}
+.row:last-child{border-bottom:1px solid var(--line)}
+.row .k{color:var(--ink-mute);padding-top:4px;font-size:10px}
+.row .v{font-size:17px;line-height:1.55;color:var(--ink)}
+.row .v small{display:block;color:var(--ink-dim);font-size:13px}
+.actions{display:flex;flex-wrap:wrap;gap:10px}
+.btn{display:inline-flex;align-items:center;gap:12px;padding:14px 20px;border:1px solid var(--line);font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink)}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#0A0A0C}
+.btn.primary:hover{background:#45B275;color:#0A0A0C}
+.mapbox{position:relative;min-height:520px}
+#map{position:absolute;inset:0;background:#0B0B0E}
+.leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) grayscale(1) brightness(.78) contrast(.92)}
+.leaflet-container{font-family:var(--mono)}
+.leaflet-control-attribution{background:rgba(8,8,10,.8)!important;color:var(--ink-mute)!important;font-size:9px}
+.leaflet-control-attribution a{color:var(--ink-dim)!important}
+.leaflet-bar a{background:#111114!important;color:var(--ink)!important;border-color:var(--line)!important}
+.pin{width:18px;height:18px;border-radius:99px;background:var(--accent);border:3px solid #0A0A0C;box-shadow:0 0 0 1px var(--accent),0 0 24px rgba(54,157,101,.7)}
+.soon{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;background:radial-gradient(ellipse at center,#0F0F13 0%,#08080A 75%);z-index:500;padding:40px}
+.soon.show{display:flex}
+.soon .big{font-family:var(--serif);font-size:clamp(48px,6vw,88px);line-height:1}
+.soon .big em{color:var(--accent)}
+.soon p{margin:0;color:var(--ink-dim);max-width:380px;line-height:1.7;font-size:15px}
+section.block{padding:120px 0;border-bottom:1px solid var(--line)}
+.block-head{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:64px;align-items:end;margin-bottom:64px}
+.block-head h2{margin:0;font-family:var(--serif);font-weight:300;font-size:clamp(44px,5.5vw,80px);line-height:1}
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line)}
+.step{padding:36px 28px 40px 0;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:18px}
+.step+.step{padding-left:28px}
+.step:last-child{border-right:0}
+.step .n{font-family:var(--serif);font-size:56px;line-height:1;color:var(--accent)}
+.step h3{margin:0;font-family:var(--serif);font-weight:400;font-size:26px;line-height:1.1}
+.step p{margin:0;color:var(--ink-dim);font-size:14.5px;line-height:1.7;text-wrap:pretty}
+.warranty{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:2px;background:var(--line);border:1px solid var(--line)}
+.wcol{background:var(--bg);padding:40px}
+.wcol h3{margin:0 0 24px;display:flex;align-items:center;gap:12px}
+.wcol ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.wcol li{padding:14px 0;border-top:1px solid var(--line);font-size:15px;line-height:1.6;color:var(--ink);display:grid;grid-template-columns:24px minmax(0,1fr)}
+.wcol li::before{content:"—";color:var(--accent)}
+.wcol.ex li::before{content:"×";color:var(--ink-mute)}
+.wcol.ex li{color:var(--ink-dim)}
+.note{margin-top:28px;color:var(--ink-mute);font-size:10px}
+@media (max-width:900px){
+.wrap{padding:0 24px}
+header .wrap,.block-head,.panel,.warranty{grid-template-columns:minmax(0,1fr)}
+.info{padding:40px 0;border-right:0}
+.mapbox{min-height:380px}
+.steps{grid-template-columns:repeat(2,minmax(0,1fr))}
+.step:nth-child(2n){border-right:0}
+.step:nth-child(n+3){border-top:1px solid var(--line)}
+.step:nth-child(3){padding-left:0}
+.tab{padding:18px 16px}.tab .status{display:none}.tab .name{font-size:22px}
+}
+</style>
+</head>
+<body>
+<nav><div class="wrap">
+<a class="back mono" href="index.html"><span>←</span><span data-i18n="back">Volver</span></a>
+<a class="logo" href="index.html"><img src="assets/valkur-logo.png" alt="Valkur"></a>
+<div class="lang"><button type="button" data-lang="es">ES</button><button type="button" data-lang="en">EN</button></div>
+</div></nav>
+
+<header><div class="wrap">
+<div>
+<div class="mono eyebrow" data-i18n="eyebrow">Servicio técnico oficial</div>
+<h1 data-i18n-html="title">Cuidamos<br><em>tu tiempo.</em></h1>
+</div>
+<p class="lead" data-i18n="lead">Cada reloj Valkur cuenta con servicio técnico oficial en la región. Elegí tu país para ver la dirección, el contacto y cómo llegar.</p>
+</div></header>
+
+<div class="wrap">
+<div class="tabs" role="tablist">
+<button class="tab" role="tab" data-tab="ar"><span class="code">AR</span><span class="name">Argentina</span><span class="status"><span class="dot"></span><span data-i18n="active">Activo</span></span></button>
+<button class="tab" role="tab" data-tab="cl"><span class="code">CL</span><span class="name">Chile</span><span class="status"><span class="dot"></span><span data-i18n="active">Activo</span></span></button>
+<button class="tab" role="tab" data-tab="pe"><span class="code">PE</span><span class="name" data-i18n="peru">Perú</span><span class="status"><span class="dot off"></span><span data-i18n="soonShort">Próximamente</span></span></button>
+</div>
+<div class="panel">
+<div class="info" id="info"></div>
+<div class="mapbox">
+<div id="map"></div>
+<div class="soon" id="soon">
+<div class="mono" style="color:var(--ink-mute)" data-i18n="peSoonEyebrow">Servicio técnico · Perú</div>
+<div class="big" data-i18n-html="peSoonTitle">Próxima<em>mente.</em></div>
+<p data-i18n="peSoonText">Estamos sumando un servicio técnico oficial en Perú. Mientras tanto, escribinos desde valkur.com.pe y te orientamos.</p>
+<a class="btn" href="https://valkur.com.pe" target="_blank" rel="noopener">valkur.com.pe ↗</a>
+</div>
+</div>
+</div>
+</div>
+
+<section class="block"><div class="wrap">
+<div class="block-head">
+<div><div class="mono eyebrow" data-i18n="stepsEyebrow">Cómo enviar tu reloj</div><h2 data-i18n-html="stepsTitle">Cuatro pasos,<br><em>sin vueltas.</em></h2></div>
+<p class="lead" data-i18n="stepsLead">Así de simple es dejar tu Valkur en manos de nuestro servicio técnico.</p>
+</div>
+<div class="steps">
+<div class="step"><div class="n">01</div><h3 data-i18n="s1t">Contactanos</h3><p data-i18n="s1p">Llamá al servicio técnico de tu país y contá qué le pasa a tu reloj. Te indicamos si necesita revisión en taller.</p></div>
+<div class="step"><div class="n">02</div><h3 data-i18n="s2t">Prepará tu reloj</h3><p data-i18n="s2p">Tené a mano el comprobante de compra y la tarjeta de garantía. Si lo enviás, protegelo en su caja original.</p></div>
+<div class="step"><div class="n">03</div><h3 data-i18n="s3t">Llevalo o envialo</h3><p data-i18n="s3p">Acercalo a la dirección del servicio técnico o coordiná el envío. Recibirás una orden con el número de seguimiento.</p></div>
+<div class="step"><div class="n">04</div><h3 data-i18n="s4t">Diagnóstico y entrega</h3><p data-i18n="s4p">Te enviamos el diagnóstico antes de cualquier trabajo. Una vez listo, te avisamos para retirarlo.</p></div>
+</div>
+</div></section>
+
+<section class="block"><div class="wrap">
+<div class="block-head">
+<div><div class="mono eyebrow" data-i18n="wEyebrow">Garantía Valkur</div><h2 data-i18n-html="wTitle">Una promesa<br><em>que se cumple.</em></h2></div>
+<p class="lead" data-i18n="wLead">Todos nuestros relojes cuentan con garantía oficial contra defectos de fabricación, válida en el servicio técnico de cada país.</p>
+</div>
+<div class="warranty">
+<div class="wcol"><h3 class="mono" style="color:var(--accent)" data-i18n="wIncl">Incluye</h3><ul>
+<li><span data-i18n="w1">Defectos de fabricación en el movimiento.</span></li>
+<li><span data-i18n="w2">Fallas de funcionamiento en condiciones normales de uso.</span></li>
+<li><span data-i18n="w3">Revisión y diagnóstico en el servicio técnico oficial.</span></li>
+</ul></div>
+<div class="wcol ex"><h3 class="mono" style="color:var(--ink-mute)" data-i18n="wExcl">No incluye</h3><ul>
+<li><span data-i18n="x1">Golpes, caídas, ingreso de agua por mal uso o roturas de cristal.</span></li>
+<li><span data-i18n="x2">Desgaste natural de correas, mallas y baño.</span></li>
+<li><span data-i18n="x3">Relojes abiertos o manipulados por terceros no autorizados.</span></li>
+</ul></div>
+</div>
+<div class="mono note" data-i18n="wNote">Para hacer válida la garantía es necesario presentar el comprobante de compra.</div>
+</div></section>
+
+<div id="site-footer"></div>
+
+<script>
+const SEDES={
+ar:{name:'Joyería Sarinelli',city:'La Lucila · Buenos Aires',addr:'Salvador Debenedetti 611',addr2:'B1637BCI La Lucila, Buenos Aires, Argentina',phone:'011 4400-2955',tel:'+541144002955',ll:[-34.4979,-58.4886]},
+cl:{name:'Servireloj',city:'Providencia · Santiago',addr:'Amapolas 1290, oficina 901',addr2:'7500000 Providencia, Región Metropolitana, Chile',phone:'+56 9 8354 7487',tel:'+56983547487',ll:[-33.42717,-70.5919]},
+pe:null};
+const T={es:{back:'Volver',eyebrow:'Servicio técnico oficial',title:'Cuidamos<br><em>tu tiempo.</em>',lead:'Cada reloj Valkur cuenta con servicio técnico oficial en la región. Elegí tu país para ver la dirección, el contacto y cómo llegar.',active:'Activo',soonShort:'Próximamente',peru:'Perú',official:'Servicio técnico oficial',kAddr:'Dirección',kPhone:'Teléfono',kHours:'Horario',call:'Llamar',directions:'Cómo llegar',peSoonEyebrow:'Servicio técnico · Perú',peSoonTitle:'Próxima<em>mente.</em>',peSoonText:'Estamos sumando un servicio técnico oficial en Perú. Mientras tanto, escribinos desde valkur.com.pe y te orientamos.',peInfoTitle:'Perú',peInfoText:'Muy pronto anunciaremos nuestro servicio técnico oficial en Perú.',stepsEyebrow:'Cómo enviar tu reloj',stepsTitle:'Cuatro pasos,<br><em>sin vueltas.</em>',stepsLead:'Así de simple es dejar tu Valkur en manos de nuestro servicio técnico.',s1t:'Contactanos',s1p:'Llamá al servicio técnico de tu país y contá qué le pasa a tu reloj. Te indicamos si necesita revisión en taller.',s2t:'Prepará tu reloj',s2p:'Tené a mano el comprobante de compra y la tarjeta de garantía. Si lo enviás, protegelo en su caja original.',s3t:'Llevalo o envialo',s3p:'Acercalo a la dirección del servicio técnico o coordiná el envío. Recibirás una orden con el número de seguimiento.',s4t:'Diagnóstico y entrega',s4p:'Te enviamos el diagnóstico antes de cualquier trabajo. Una vez listo, te avisamos para retirarlo.',wEyebrow:'Garantía Valkur',wTitle:'Una promesa<br><em>que se cumple.</em>',wLead:'Todos nuestros relojes cuentan con garantía oficial contra defectos de fabricación, válida en el servicio técnico de cada país.',wIncl:'Incluye',wExcl:'No incluye',w1:'Defectos de fabricación en el movimiento.',w2:'Fallas de funcionamiento en condiciones normales de uso.',w3:'Revisión y diagnóstico en el servicio técnico oficial.',x1:'Golpes, caídas, ingreso de agua por mal uso o roturas de cristal.',x2:'Desgaste natural de correas, mallas y baño.',x3:'Relojes abiertos o manipulados por terceros no autorizados.',wNote:'Para hacer válida la garantía es necesario presentar el comprobante de compra.',tag:'Hecho con respeto por el tiempo'},
+en:{back:'Back',eyebrow:'Official service centers',title:'We take care<br><em>of your time.</em>',lead:'Every Valkur watch is backed by an official service center in the region. Choose your country to see the address, contact and directions.',active:'Active',soonShort:'Coming soon',peru:'Peru',official:'Official service center',kAddr:'Address',kPhone:'Phone',kHours:'Hours',call:'Call',directions:'Get directions',peSoonEyebrow:'Service center · Peru',peSoonTitle:'Coming <em>soon.</em>',peSoonText:'We are adding an official service center in Peru. Meanwhile, reach us through valkur.com.pe and we will guide you.',peInfoTitle:'Peru',peInfoText:'We will soon announce our official service center in Peru.',stepsEyebrow:'How to send your watch',stepsTitle:'Four steps,<br><em>no detours.</em>',stepsLead:'This is how simple it is to leave your Valkur in the hands of our service center.',s1t:'Contact us',s1p:'Call the service center in your country and tell us what is happening with your watch. We will let you know if it needs a workshop check.',s2t:'Prepare your watch',s2p:'Keep your proof of purchase and warranty card at hand. If you ship it, protect it in its original box.',s3t:'Drop it off or ship it',s3p:'Bring it to the service center address or arrange shipping. You will receive an order with a tracking number.',s4t:'Diagnosis and return',s4p:'We send you the diagnosis before any work is done. Once ready, we let you know so you can pick it up.',wEyebrow:'Valkur warranty',wTitle:'A promise<br><em>that is kept.</em>',wLead:'All our watches come with an official warranty against manufacturing defects, valid at the service center in each country.',wIncl:'Covered',wExcl:'Not covered',w1:'Manufacturing defects in the movement.',w2:'Malfunctions under normal conditions of use.',w3:'Inspection and diagnosis at the official service center.',x1:'Impacts, drops, water damage from misuse or broken crystals.',x2:'Natural wear of straps, bracelets and plating.',x3:'Watches opened or handled by unauthorized third parties.',wNote:'A proof of purchase is required to claim the warranty.',tag:'Crafted with respect for time'}};
+let lang='es',cur='ar',map,marker;
+function esc(s){return s}
+function renderInfo(){
+const t=T[lang],s=SEDES[cur],el=document.getElementById('info');
+if(!s){el.innerHTML=`<div class="mono" style="color:var(--ink-mute)">${t.official}</div><h2>${t.peInfoTitle}<br><em style="color:var(--accent)">${t.soonShort}.</em></h2><p class="lead">${t.peInfoText}</p><div class="actions"><a class="btn" href="https://valkur.com.pe" target="_blank" rel="noopener">valkur.com.pe ↗</a></div>`;return;}
+const q=encodeURIComponent(s.addr+', '+s.addr2);
+el.innerHTML=`<div><div class="mono" style="color:var(--ink-mute);margin-bottom:16px">${t.official} · ${s.city}</div><h2>${s.name}</h2></div>
+<div class="rows">
+<div class="row"><div class="k mono">${t.kAddr}</div><div class="v">${s.addr}<small>${s.addr2}</small></div></div>
+<div class="row"><div class="k mono">${t.kPhone}</div><div class="v"><a href="tel:${s.tel}">${s.phone}</a></div></div>
+${s.hours?`<div class="row"><div class="k mono">${t.kHours}</div><div class="v">${s.hours[lang]}</div></div>`:''}
+</div>
+<div class="actions"><a class="btn primary" href="tel:${s.tel}">${t.call} →</a><a class="btn" href="https://www.google.com/maps/search/?api=1&query=${q}" target="_blank" rel="noopener">${t.directions} ↗</a></div>`;
+}
+function select(k){
+cur=k;document.querySelectorAll('.tab').forEach(b=>{const on=b.dataset.tab===k;b.classList.toggle('on',on);b.setAttribute('aria-selected',on)});
+renderInfo();const s=SEDES[k];document.getElementById('soon').classList.toggle('show',!s);
+if(map&&s){marker.setLatLng(s.ll);map.setView(s.ll,16,{animate:false});}
+try{history.replaceState(null,'','#'+k)}catch(e){}
+}
+function setLang(l){if(!T[l])l='es';lang=l;try{localStorage.setItem('valkur.lang',l)}catch(e){}document.documentElement.lang=l;if(window.I18N&&window.I18N.lang!==l)window.I18N.set(l);
+document.querySelectorAll('[data-i18n]').forEach(e=>e.textContent=T[l][e.dataset.i18n]);
+document.querySelectorAll('[data-i18n-html]').forEach(e=>e.innerHTML=T[l][e.dataset.i18nHtml]);
+document.querySelectorAll('[data-lang]').forEach(b=>b.classList.toggle('on',b.dataset.lang===l));renderInfo();}
+map=L.map('map',{scrollWheelZoom:false,zoomControl:true}).setView(SEDES.ar.ll,16);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'}).addTo(map);
+marker=L.marker(SEDES.ar.ll,{icon:L.divIcon({className:'',html:'<div class="pin"></div>',iconSize:[18,18],iconAnchor:[9,9]})}).addTo(map);
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>select(b.dataset.tab));
+document.querySelectorAll('[data-lang]').forEach(b=>b.onclick=()=>setLang(b.dataset.lang));
+try{lang=localStorage.getItem('valkur.lang')||'es'}catch(e){}
+setLang(lang);
+const h=(location.hash||'').slice(1);select(SEDES.hasOwnProperty(h)?h:'ar');
+</script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="components/i18n.jsx"></script>
+<script type="text/babel" src="components/Footer.jsx"></script>
+<script type="text/babel">ReactDOM.createRoot(document.getElementById('site-footer')).render(<Footer/>);</script>
+</body>
+</html>
